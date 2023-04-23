@@ -7,6 +7,7 @@ import {FullScreen, ContentScreen} from './styles';
 export type ScreenProps = {
   isScrollableContent?: boolean;
   color?: keyof ThemeColors;
+  withSafeArea?: boolean;
   showsVerticalScrollIndicator?: boolean;
   showsHorizontalScrollIndicator?: boolean;
 };
@@ -14,16 +15,24 @@ export type ScreenProps = {
 export const Screen: React.FC<React.PropsWithChildren<ScreenProps>> =
   React.memo(
     ({
-      isScrollableContent = true,
       color,
       children,
+      withSafeArea = true,
+      isScrollableContent = true,
       showsVerticalScrollIndicator,
       showsHorizontalScrollIndicator,
     }) => {
+      if (!children) {
+        return null;
+      }
+
+      const styleScroll = {paddingBottom: 40};
+
       const content = !isScrollableContent ? (
         children
       ) : (
         <ScrollView
+          contentContainerStyle={styleScroll}
           showsVerticalScrollIndicator={showsVerticalScrollIndicator}
           showsHorizontalScrollIndicator={showsHorizontalScrollIndicator}>
           {children}
@@ -32,7 +41,10 @@ export const Screen: React.FC<React.PropsWithChildren<ScreenProps>> =
 
       return (
         <FullScreen color={color}>
-          {children && <ContentScreen color={color}>{content}</ContentScreen>}
+          {children && !withSafeArea && content}
+          {children && withSafeArea && (
+            <ContentScreen color={color}>{content}</ContentScreen>
+          )}
         </FullScreen>
       );
     },
