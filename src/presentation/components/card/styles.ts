@@ -32,7 +32,7 @@ export const MetaData = styled.View`
   justify-content: space-between;
 `;
 
-export const Author = styled.Text`
+export const Author = styled.Text.attrs(numberOfLines)`
   font-size: 14px;
   font-weight: bold;
   color: ${getThemeColor('header')};

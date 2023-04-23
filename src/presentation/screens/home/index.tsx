@@ -1,20 +1,12 @@
 import * as React from 'react';
+import {useNavigation} from '@react-navigation/native';
 import {Dimensions, FlatList, ListRenderItemInfo} from 'react-native';
 
+import {Category, Post} from '../../types';
 import {TitleContainer, Title, ViewAll, ViewAllLabel} from './styles';
 import {Screen, HeaderAvatar, Badge, Card, CardSimple} from '../../components';
 
-import {
-  avatar,
-  name,
-  title,
-  categories,
-  Category,
-  hotTopics,
-  HotTopics,
-  mostPopular,
-  MostPopular,
-} from './mock';
+import {avatar, name, title, categories, hotTopics, mostPopular} from './mock';
 
 type HomeContentItem = {
   key: string;
@@ -24,7 +16,8 @@ type HomeContentItem = {
 
 const {width: widthWindow} = Dimensions.get('window');
 
-const Home: React.FC = () => {
+const HomeScreen: React.FC = () => {
+  const navigation = useNavigation();
   const [category, setCategory] = React.useState(0);
 
   const onPressAvatar = React.useCallback(() => {
@@ -47,29 +40,38 @@ const Home: React.FC = () => {
     console.log('All Hot Topic');
   }, []);
 
-  const onPressHotTopic = React.useCallback((postId: number) => {
-    return () =>
-      console.log(
-        'Hot Topic:',
-        hotTopics.find(post => post.id === postId),
-      );
-  }, []);
+  const onPressHotTopic = React.useCallback(
+    (postId: number) => {
+      return () => {
+        const post = hotTopics.find(item => item.id === postId);
+
+        if (post) {
+          navigation.navigate('Post', {post});
+        }
+      };
+    },
+    [navigation],
+  );
 
   const onPressAllMostPopular = React.useCallback(() => {
     console.log('All Most Popular');
   }, []);
 
-  const onPressMostPopular = React.useCallback((postId: number) => {
-    return () =>
-      console.log(
-        'Most Popular:',
-        mostPopular.find(post => post.id === postId),
-      );
-  }, []);
+  const onPressMostPopular = React.useCallback(
+    (postId: number) => {
+      return () => {
+        const post = mostPopular.find(item => item.id === postId);
+
+        if (post) {
+          navigation.navigate('Post', {post});
+        }
+      };
+    },
+    [navigation],
+  );
 
   const {data, indexes} = React.useMemo(() => {
-    const filterCategory = (item: HotTopics | MostPopular) =>
-      item.category === category;
+    const filterCategory = (item: Post) => item.category === category;
 
     const listHotTopics =
       category === 0 ? hotTopics : hotTopics.filter(filterCategory);
@@ -166,7 +168,7 @@ const Home: React.FC = () => {
             return <></>;
           }
 
-          const renderItem = ({item, index}: ListRenderItemInfo<HotTopics>) => {
+          const renderItem = ({item, index}: ListRenderItemInfo<Post>) => {
             const style = {
               marginRight: index === hotTopics.length - 1 ? 20 : 10,
             };
@@ -197,7 +199,7 @@ const Home: React.FC = () => {
           };
 
           return (
-            <FlatList<HotTopics>
+            <FlatList<Post>
               style={styleList}
               data={listHotTopics}
               horizontal={true}
@@ -233,7 +235,7 @@ const Home: React.FC = () => {
             return <></>;
           }
 
-          const renderItem = ({item}: ListRenderItemInfo<MostPopular>) => {
+          const renderItem = ({item}: ListRenderItemInfo<Post>) => {
             const style = {
               marginBottom: 20,
             };
@@ -260,7 +262,7 @@ const Home: React.FC = () => {
           };
 
           return (
-            <FlatList<MostPopular>
+            <FlatList<Post>
               style={styleList}
               data={listMostPopular}
               horizontal={false}
@@ -294,7 +296,7 @@ const Home: React.FC = () => {
   ]);
 
   return (
-    <Screen isScrollableContent={false}>
+    <Screen isScrollableContent={false} withSafeArea={true}>
       <FlatList<HomeContentItem>
         data={data}
         stickyHeaderIndices={indexes}
@@ -306,4 +308,4 @@ const Home: React.FC = () => {
   );
 };
 
-export default Home;
+export default React.memo(HomeScreen);

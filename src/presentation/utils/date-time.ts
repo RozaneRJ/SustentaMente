@@ -21,7 +21,8 @@ export const zero = (value: number): string => {
   return value.toString();
 };
 
-export const formatDate = (date: Date) => {
+export const formatDate = (dateStr: string) => {
+  const date = new Date(dateStr);
   const day = date.getDate();
   const year = date.getFullYear();
   const month = months[date.getMonth()];
@@ -29,7 +30,8 @@ export const formatDate = (date: Date) => {
   return `${month} ${day}.${year}`;
 };
 
-export const formatTime = (date: Date) => {
+export const formatTime = (dateStr: string) => {
+  const date = new Date(dateStr);
   const hours = zero(date.getHours());
   const minutes = zero(date.getMinutes());
   const period = date.getHours() < 12 ? 'AM' : 'PM';

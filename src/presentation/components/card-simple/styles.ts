@@ -31,7 +31,7 @@ export const MetaData = styled.View`
   justify-content: space-between;
 `;
 
-export const Author = styled.Text`
+export const Author = styled.Text.attrs(numberOfLines)`
   flex: 1;
   margin-left: 10px;
   font-size: 14px;
