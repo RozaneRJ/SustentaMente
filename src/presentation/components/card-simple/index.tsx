@@ -24,7 +24,7 @@ export type UserSimple = {
 export type CardSimpleProps = {
   image: ImageSourcePropType;
   user: UserSimple;
-  date: Date;
+  date: string;
   title: string;
   onPress: () => void;
   style?: StyleProp<ViewStyle>;

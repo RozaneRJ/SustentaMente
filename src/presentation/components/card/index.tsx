@@ -26,7 +26,7 @@ export type User = {
 export type CardProps = {
   image: ImageSourcePropType;
   user: User;
-  date: Date;
+  date: string;
   title: string;
   width?: number;
   onPress: () => void;
