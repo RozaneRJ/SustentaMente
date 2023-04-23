@@ -1,20 +1,10 @@
-import {ImageSourcePropType} from 'react-native';
-
-export type User = {
-  name: string;
-  image: ImageSourcePropType;
-};
+import {Category, Post, PostContentType} from '../../types';
 
 export const avatar =
   'https://conteudo.imguol.com.br/c/entretenimento/2e/2021/02/24/agnes-hikari-1614196043650_v2_300x400.jpg';
 
 export const name = 'Leslie Alexander';
 export const title = 'Welcome Back 👋🏼';
-
-export type Category = {
-  id: number;
-  title: string;
-};
 
 export const categories: Category[] = [
   {
@@ -43,16 +33,7 @@ export const categories: Category[] = [
   },
 ];
 
-export type HotTopics = {
-  id: number;
-  image: ImageSourcePropType;
-  user: User;
-  date: Date;
-  title: string;
-  category: number;
-};
-
-export const hotTopics: HotTopics[] = [
+export const hotTopics: Post[] = [
   {
     id: 1,
     image: {
@@ -65,8 +46,33 @@ export const hotTopics: HotTopics[] = [
       },
     },
     category: 1,
-    date: new Date(),
+    date: new Date().toString(),
     title: 'Hot Topic 1',
+    content: [
+      {
+        key: 'c1',
+        type: PostContentType.TEXT,
+        value:
+          'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras at neque ex. Phasellus sit amet maximus velit, vel facilisis nisl. Proin ullamcorper neque lacus, in pellentesque leo vulputate ac. Mauris molestie facilisis sollicitudin. Aenean luctus arcu metus, et mollis erat maximus a.',
+      },
+      {
+        key: 'c2',
+        type: PostContentType.STRONG,
+        value:
+          'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras at neque ex. Phasellus sit amet maximus velit, vel facilisis nisl. Proin ullamcorper neque lacus, in pellentesque leo vulputate ac. Mauris molestie facilisis sollicitudin. Aenean luctus arcu metus, et mollis erat maximus a.',
+      },
+      {
+        key: 'c3',
+        type: PostContentType.HEADER,
+        value: 'Lorem ipsum dolor sit amet',
+      },
+      {
+        key: 'c4',
+        type: PostContentType.IMAGE,
+        value:
+          'https://services.meteored.com/img/article/interacao-oceano-atmosfera-11501-5_1280.jpg',
+      },
+    ],
   },
   {
     id: 2,
@@ -80,21 +86,13 @@ export const hotTopics: HotTopics[] = [
       },
     },
     category: 3,
-    date: new Date(),
+    date: new Date().toString(),
     title: 'Hot Topic 2',
+    content: [],
   },
 ];
 
-export type MostPopular = {
-  id: number;
-  image: ImageSourcePropType;
-  user: User;
-  date: Date;
-  title: string;
-  category: number;
-};
-
-export const mostPopular: MostPopular[] = [
+export const mostPopular: Post[] = [
   {
     id: 1,
     image: {
@@ -107,8 +105,9 @@ export const mostPopular: MostPopular[] = [
       },
     },
     category: 1,
-    date: new Date(),
+    date: new Date().toString(),
     title: 'Most Popular 1',
+    content: [],
   },
   {
     id: 2,
@@ -122,8 +121,9 @@ export const mostPopular: MostPopular[] = [
       },
     },
     category: 2,
-    date: new Date(),
+    date: new Date().toString(),
     title: 'Most Simple 2',
+    content: [],
   },
   {
     id: 3,
@@ -137,7 +137,8 @@ export const mostPopular: MostPopular[] = [
       },
     },
     category: 4,
-    date: new Date(),
+    date: new Date().toString(),
     title: 'Most Simple 3',
+    content: [],
   },
 ];
