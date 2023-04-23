@@ -11,6 +11,7 @@ export type ThemeColors = {
   black: string;
   white: string;
   shape: string;
+  shadow: string;
   primary: string;
   background: string;
   backgroundEnd: string;

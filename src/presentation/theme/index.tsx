@@ -18,6 +18,17 @@ export const getThemeColor =
   ({theme}: {theme: ThemeType}) =>
     theme.colors[color];
 
+export const getThemeShadow = () => ({
+  shadowColor: getThemeColor('shadow'),
+  shadowOffset: {
+    width: 0,
+    height: 2,
+  },
+  shadowOpacity: 0.12,
+  shadowRadius: 3.84,
+  elevation: 5,
+});
+
 export const useTheme = (): Required<ThemeType> => React.useContext(Context);
 
 export const useThemeCurrent = () => {

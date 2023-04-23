@@ -1,9 +1,9 @@
-import React from 'react';
+import * as React from 'react';
 import {StatusBar} from 'react-native';
 
 import {Theme, useThemeCurrent} from './presentation/theme';
 
-import {Screen, Title} from './style';
+import Home from './presentation/screens/home';
 
 const App: React.FC = () => {
   const theme = useThemeCurrent();
@@ -15,9 +15,7 @@ const App: React.FC = () => {
         backgroundColor="transparent"
         barStyle={theme.colors.statusBar}
       />
-      <Screen>
-        <Title>SustentaMente</Title>
-      </Screen>
+      <Home />
     </Theme>
   );
 };
