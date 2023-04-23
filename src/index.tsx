@@ -1,9 +1,8 @@
 import * as React from 'react';
 import {StatusBar} from 'react-native';
 
+import {Navigation} from './presentation/navigation';
 import {Theme, useThemeCurrent} from './presentation/theme';
-
-import Home from './presentation/screens/home';
 
 const App: React.FC = () => {
   const theme = useThemeCurrent();
@@ -15,7 +14,7 @@ const App: React.FC = () => {
         backgroundColor="transparent"
         barStyle={theme.colors.statusBar}
       />
-      <Home />
+      <Navigation />
     </Theme>
   );
 };
