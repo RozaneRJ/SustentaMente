@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {ScrollView} from 'react-native';
+import {ScrollView, StyleProp, ViewStyle} from 'react-native';
 
 import {ThemeColors} from '../../theme/types';
 import {FullScreen, ContentScreen} from './styles';
@@ -8,6 +8,7 @@ export type ScreenProps = {
   isScrollableContent?: boolean;
   color?: keyof ThemeColors;
   withSafeArea?: boolean;
+  style?: StyleProp<ViewStyle>;
   showsVerticalScrollIndicator?: boolean;
   showsHorizontalScrollIndicator?: boolean;
 };
@@ -15,6 +16,7 @@ export type ScreenProps = {
 export const Screen: React.FC<React.PropsWithChildren<ScreenProps>> =
   React.memo(
     ({
+      style,
       color,
       children,
       withSafeArea = true,
@@ -26,12 +28,15 @@ export const Screen: React.FC<React.PropsWithChildren<ScreenProps>> =
         return null;
       }
 
-      const styleScroll = {paddingBottom: 40};
+      const styleScroll = {
+        paddingBottom: 40,
+      };
 
       const content = !isScrollableContent ? (
         children
       ) : (
         <ScrollView
+          style={style}
           contentContainerStyle={styleScroll}
           showsVerticalScrollIndicator={showsVerticalScrollIndicator}
           showsHorizontalScrollIndicator={showsHorizontalScrollIndicator}>
