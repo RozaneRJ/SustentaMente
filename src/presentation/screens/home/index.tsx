@@ -3,7 +3,16 @@ import {useNavigation} from '@react-navigation/native';
 import {Dimensions, FlatList, ListRenderItemInfo} from 'react-native';
 
 import {Category, Post} from '../../types';
-import {TitleContainer, Title, ViewAll, ViewAllLabel} from './styles';
+import {
+  TitleContainer,
+  Title,
+  ViewAll,
+  ViewAllLabel,
+  EmptyContainer,
+  EmptyIcon,
+  EmptyText,
+  EmptyTextBold,
+} from './styles';
 import {Screen, HeaderAvatar, Badge, Card, CardSimple} from '../../components';
 
 import {avatar, name, title, categories, hotTopics, mostPopular} from './mock';
@@ -83,66 +92,7 @@ const HomeScreen: React.FC = () => {
 
     const showMostPopular = listMostPopular.length > 0;
 
-    const items: HomeContentItem[] = [
-      {
-        key: 'HEADER',
-        render: () => (
-          <HeaderAvatar
-            name={name}
-            title={title}
-            avatar={{uri: avatar}}
-            onPressAvatar={onPressAvatar}
-            onPressSearch={onPressSearch}
-            onPressNotification={onPressNotification}
-          />
-        ),
-      },
-      {
-        key: 'CATEGORIES',
-        render: () => {
-          const renderItem = ({item, index}: ListRenderItemInfo<Category>) => {
-            const isCategorySelected = category === item.id;
-            const color = isCategorySelected ? 'primary' : undefined;
-            const textColor = isCategorySelected ? 'white' : undefined;
-            const fontWeight = isCategorySelected ? 'bold' : undefined;
-
-            const style = {
-              marginRight: index === categories.length - 1 ? 20 : 5,
-            };
-
-            const onPress = onPressCategory(item.id);
-
-            return (
-              <Badge
-                style={style}
-                color={color}
-                onPress={onPress}
-                title={item.title}
-                textColor={textColor}
-                fontWeight={fontWeight}
-              />
-            );
-          };
-
-          const styleList = {
-            paddingTop: 20,
-            paddingRight: 0,
-            paddingBottom: 0,
-            paddingLeft: 10,
-          };
-
-          return (
-            <FlatList<Category>
-              style={styleList}
-              data={categories}
-              horizontal={true}
-              renderItem={renderItem}
-              showsHorizontalScrollIndicator={false}
-              keyExtractor={item => item.id.toString()}
-            />
-          );
-        },
-      },
+    const hotTopicsComponents = [
       {
         key: 'TITLE_HOT_TOPICS',
         isTitle: true,
@@ -210,6 +160,9 @@ const HomeScreen: React.FC = () => {
           );
         },
       },
+    ];
+
+    const mostPopularComponents = [
       {
         key: 'TITLE_MOST_POPULAR',
         isTitle: true,
@@ -274,6 +227,99 @@ const HomeScreen: React.FC = () => {
         },
       },
     ];
+
+    const emptyComponents: HomeContentItem = {
+      key: 'EMPTY',
+      render: () => {
+        const selectedCategory = categories.find(item => item.id === category);
+
+        return (
+          <EmptyContainer>
+            <EmptyIcon />
+            <EmptyText>
+              Desculpe, ainda estamos plantando esta categoria{' '}
+              <EmptyTextBold>{`"${selectedCategory.title}"`}</EmptyTextBold>
+            </EmptyText>
+          </EmptyContainer>
+        );
+      },
+    };
+
+    let items: HomeContentItem[] = [
+      {
+        key: 'HEADER',
+        render: () => (
+          <HeaderAvatar
+            name={name}
+            title={title}
+            avatar={{uri: avatar}}
+            onPressAvatar={onPressAvatar}
+            onPressSearch={onPressSearch}
+            onPressNotification={onPressNotification}
+          />
+        ),
+      },
+      {
+        key: 'CATEGORIES',
+        render: () => {
+          const renderItem = ({item, index}: ListRenderItemInfo<Category>) => {
+            const isCategorySelected = category === item.id;
+            const color = isCategorySelected ? 'primary' : undefined;
+            const textColor = isCategorySelected ? 'white' : undefined;
+            const fontWeight = isCategorySelected ? 'bold' : undefined;
+
+            const style = {
+              marginRight: index === categories.length - 1 ? 20 : 5,
+            };
+
+            const onPress = onPressCategory(item.id);
+
+            return (
+              <Badge
+                style={style}
+                color={color}
+                onPress={onPress}
+                title={item.title}
+                textColor={textColor}
+                fontWeight={fontWeight}
+              />
+            );
+          };
+
+          const styleList = {
+            paddingTop: 20,
+            paddingRight: 0,
+            paddingBottom: 0,
+            paddingLeft: 10,
+          };
+
+          return (
+            <FlatList<Category>
+              style={styleList}
+              data={categories}
+              horizontal={true}
+              renderItem={renderItem}
+              showsHorizontalScrollIndicator={false}
+              keyExtractor={item => item.id.toString()}
+            />
+          );
+        },
+      },
+    ];
+
+    console.log('data', hotTopics.length, mostPopular.length);
+
+    if (listHotTopics.length) {
+      items = [...items, ...hotTopicsComponents];
+    }
+
+    if (listMostPopular.length) {
+      items = [...items, ...mostPopularComponents];
+    }
+
+    if (!listHotTopics.length && !listMostPopular.length) {
+      items = [...items, emptyComponents];
+    }
 
     const itemsIndexes: number[] = [];
 
