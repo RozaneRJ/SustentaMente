@@ -13,8 +13,9 @@ import {
   EmptyText,
   EmptyTextBold,
 } from './styles';
-import {Screen, HeaderAvatar, Badge, Card, CardSimple} from '../../components';
 
+import {ListContext} from '../list/context';
+import {Screen, HeaderAvatar, Badge, Card, CardSimple} from '../../components';
 import {avatar, name, title, categories, hotTopics, mostPopular} from './mock';
 
 type HomeContentItem = {
@@ -46,8 +47,8 @@ const HomeScreen: React.FC = () => {
   }, []);
 
   const onPressAllHotTopic = React.useCallback(() => {
-    console.log('All Hot Topic');
-  }, []);
+    navigation.navigate('List', {context: ListContext.HOT_TOPICS});
+  }, [navigation]);
 
   const onPressHotTopic = React.useCallback(
     (postId: number) => {
@@ -63,8 +64,8 @@ const HomeScreen: React.FC = () => {
   );
 
   const onPressAllMostPopular = React.useCallback(() => {
-    console.log('All Most Popular');
-  }, []);
+    navigation.navigate('List', {context: ListContext.MOST_POPULAR});
+  }, [navigation]);
 
   const onPressMostPopular = React.useCallback(
     (postId: number) => {
@@ -306,8 +307,6 @@ const HomeScreen: React.FC = () => {
         },
       },
     ];
-
-    console.log('data', hotTopics.length, mostPopular.length);
 
     if (listHotTopics.length) {
       items = [...items, ...hotTopicsComponents];
