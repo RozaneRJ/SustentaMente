@@ -2,21 +2,22 @@ import * as React from 'react';
 import {useNavigation} from '@react-navigation/native';
 import {Dimensions, FlatList, ListRenderItemInfo} from 'react-native';
 
-import {Category, Post} from '../../types';
 import {
-  TitleContainer,
-  Title,
-  ViewAll,
-  ViewAllLabel,
-  EmptyContainer,
-  EmptyIcon,
-  EmptyText,
-  EmptyTextBold,
-} from './styles';
+  Screen,
+  HeaderAvatar,
+  Card,
+  CardSimple,
+  Categories,
+  EmptyList,
+} from '../../components';
 
+import {Post} from '../../types';
 import {ListContext} from '../list/context';
-import {Screen, HeaderAvatar, Badge, Card, CardSimple} from '../../components';
+import {filterPostsByCategoryId} from '../../utils/filter-posts-by-category-id';
+
 import {avatar, name, title, categories, hotTopics, mostPopular} from './mock';
+
+import {TitleContainer, Title, ViewAll, ViewAllLabel} from './styles';
 
 type HomeContentItem = {
   key: string;
@@ -28,7 +29,7 @@ const {width: widthWindow} = Dimensions.get('window');
 
 const HomeScreen: React.FC = () => {
   const navigation = useNavigation();
-  const [category, setCategory] = React.useState(0);
+  const [categoryId, setCategoryId] = React.useState(0);
 
   const onPressAvatar = React.useCallback(() => {
     // code here...
@@ -42,8 +43,8 @@ const HomeScreen: React.FC = () => {
     // code here...
   }, []);
 
-  const onPressCategory = React.useCallback((categoryId: number) => {
-    return () => setCategory(categoryId);
+  const onPressCategory = React.useCallback((id: number) => {
+    setCategoryId(id);
   }, []);
 
   const onPressAllHotTopic = React.useCallback(() => {
@@ -81,15 +82,15 @@ const HomeScreen: React.FC = () => {
   );
 
   const {data, indexes} = React.useMemo(() => {
-    const filterCategory = (item: Post) => item.category === category;
+    const filterCategory = filterPostsByCategoryId(categoryId);
 
     const listHotTopics =
-      category === 0 ? hotTopics : hotTopics.filter(filterCategory);
+      categoryId === 0 ? hotTopics : hotTopics.filter(filterCategory);
 
     const showHotTopics = listHotTopics.length > 0;
 
     const listMostPopular =
-      category === 0 ? mostPopular : mostPopular.filter(filterCategory);
+      categoryId === 0 ? mostPopular : mostPopular.filter(filterCategory);
 
     const showMostPopular = listMostPopular.length > 0;
 
@@ -232,17 +233,11 @@ const HomeScreen: React.FC = () => {
     const emptyComponents: HomeContentItem = {
       key: 'EMPTY',
       render: () => {
-        const selectedCategory = categories.find(item => item.id === category);
-
-        return (
-          <EmptyContainer>
-            <EmptyIcon />
-            <EmptyText>
-              Desculpe, ainda estamos plantando esta categoria{' '}
-              <EmptyTextBold>{`"${selectedCategory.title}"`}</EmptyTextBold>
-            </EmptyText>
-          </EmptyContainer>
+        const selectedCategory = categories.find(
+          item => item.id === categoryId,
         );
+
+        return <EmptyList category={selectedCategory?.title as string} />;
       },
     };
 
@@ -262,49 +257,13 @@ const HomeScreen: React.FC = () => {
       },
       {
         key: 'CATEGORIES',
-        render: () => {
-          const renderItem = ({item, index}: ListRenderItemInfo<Category>) => {
-            const isCategorySelected = category === item.id;
-            const color = isCategorySelected ? 'primary' : undefined;
-            const textColor = isCategorySelected ? 'white' : undefined;
-            const fontWeight = isCategorySelected ? 'bold' : undefined;
-
-            const style = {
-              marginRight: index === categories.length - 1 ? 20 : 5,
-            };
-
-            const onPress = onPressCategory(item.id);
-
-            return (
-              <Badge
-                style={style}
-                color={color}
-                onPress={onPress}
-                title={item.title}
-                textColor={textColor}
-                fontWeight={fontWeight}
-              />
-            );
-          };
-
-          const styleList = {
-            paddingTop: 20,
-            paddingRight: 0,
-            paddingBottom: 0,
-            paddingLeft: 10,
-          };
-
-          return (
-            <FlatList<Category>
-              style={styleList}
-              data={categories}
-              horizontal={true}
-              renderItem={renderItem}
-              showsHorizontalScrollIndicator={false}
-              keyExtractor={item => item.id.toString()}
-            />
-          );
-        },
+        render: () => (
+          <Categories
+            categories={categories}
+            selectedCategoryId={categoryId}
+            onPressCategory={onPressCategory}
+          />
+        ),
       },
     ];
 
@@ -329,7 +288,7 @@ const HomeScreen: React.FC = () => {
       indexes: itemsIndexes,
     };
   }, [
-    category,
+    categoryId,
     onPressAllHotTopic,
     onPressAllMostPopular,
     onPressAvatar,

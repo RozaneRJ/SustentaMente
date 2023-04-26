@@ -23,13 +23,13 @@ export const BackIcon = styled(BackSvg).attrs(() => iconSize(16))``;
 
 export const BackButton = styled.TouchableOpacity`
   margin-left: 10px;
+  width: 40px;
   height: 40px;
-  align-items: center;
+  align-items: flex-start;
   justify-content: center;
 `;
 
 export const Title = styled.Text`
-  margin-left: 16px;
   font-size: 14px;
   font-weight: bold;
   color: ${getThemeColor('header')};
